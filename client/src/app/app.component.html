@@ -19,15 +19,15 @@
                 <li class="search-wrap">
                     <a href="javascript:void(0)" name="search-icon" class="search-icon"><i class="glyphicon glyphicon-search"></i></a>
                 </li>
-                <li *ngIf="!user"><a>Register</a></li>
-                <li *ngIf="!user"><a>Login</a></li>
+                <li *ngIf="!user"><a routerLink="auth/register" routerLinkActive="active">Register</a></li>
+                <li *ngIf="!user"><a routerLink="auth/login" routerLinkActive="active">Login</a></li>
                 <li *ngIf="user" class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Setting <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">Password</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Logout</a></li>
+                        <li><a routerLink="auth/logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -52,5 +52,6 @@
                 <a href="#">Top</a>
             </li>
         </ul>
+        <router-outlet></router-outlet>
     </div>
 </div>
