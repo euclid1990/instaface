@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { NavtabComponent } from './navtab.component';
 
@@ -8,6 +9,7 @@ describe('NavtabComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       declarations: [ NavtabComponent ]
     })
     .compileComponents();
@@ -22,4 +24,9 @@ describe('NavtabComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render nav tab', async(() => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('ul.nav-tabs > li > a').textContent).toContain('News Feed');
+  }));
 });

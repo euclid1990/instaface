@@ -5,27 +5,34 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ForgotComponent } from './forgot/forgot.component';
 import { ResetComponent } from './reset/reset.component';
+import { AuthComponent } from './auth.component';
 
 const routes: Routes = [
   {
-    path: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'logout',
-    component: LogoutComponent
-  },
-  {
-    path: 'forgot',
-    component: ForgotComponent
-  },
-  {
-    path: 'reset',
-    component: ResetComponent
+    path: '',
+    component: AuthComponent,
+    children: [
+      {
+        path: 'register',
+        component: RegisterComponent
+      },
+      {
+        path: 'login',
+        component: LoginComponent
+      },
+      {
+        path: 'logout',
+        component: LogoutComponent
+      },
+      {
+        path: 'forgot',
+        component: ForgotComponent
+      },
+      {
+        path: 'reset',
+        component: ResetComponent
+      }
+    ]
   }
 ];
 

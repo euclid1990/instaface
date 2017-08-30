@@ -36,3 +36,35 @@ button, a {
         cursor: pointer;
     }
 }
+
+/**
+ * Angular2: Add Custom CSS for Visual Feedback;
+ */
+input, select {
+    &.ng-valid {
+        border-left: 5px solid #42A948; /* green */
+    }
+    &.ng-invalid, &.invalid {
+        border-left: 5px solid #a94442; /* red */
+    }
+}
+
+/**
+ * Style of Form
+ */
+.form-header {
+    margin: 15px auto;
+    font-size: 20px;
+    color: #666;
+    text-align: center;
+}
+.form-error {
+    font-size: 12px;
+    margin-top: 5px;
+    padding: 5px;
+    color: #a94442;
+    background-color: #f2dede;
+    border: 1px solid transparent;
+    border-color: #dca7a7;
+    border-radius: 4px;
+}

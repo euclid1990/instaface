@@ -1,3 +1,33 @@
-<p>
-  login works!
-</p>
+<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+    <h1 class="form-header">Login</h1>
+    <form (ngSubmit)="onSubmit()" [formGroup]="form" #f="ngForm" autocomplete="off">
+        <ul *ngIf="(formMessages | json) != '{}'" class="form-error margin-bottom-15 break-word">
+            <li *ngFor="let message of formMessages | objectToArray" class="margin-left-15">{{ message }}</li>
+        </ul>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Username or Email"
+            formControlName="username" appFocus>
+            <div *ngIf="formErrors.username" class="form-error">
+                {{ formErrors.username }}
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Password"
+            autocomplete="new-password"
+            formControlName="password">
+            <div *ngIf="formErrors.password" class="form-error">
+                {{ formErrors.password }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-center">
+                <button type="submit" class="btn btn-default" [disabled]="!f.form.valid || submitting">Login <i *ngIf="submitting" class="fa fa-circle-o-notch fa-spin"></i></button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-right">
+                <a routerLink="auth/forgot">Forgot the password?</a>
+            </div>
+        </div>
+    </form>
+</div>
