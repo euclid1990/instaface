@@ -4,7 +4,6 @@ import { Http, Headers } from '@angular/http';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { Helper } from '../../utils/helper';
@@ -76,13 +75,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      let body = JSON.stringify(this.form.value);
-      let headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      this.http.post(this.api.get('user.login'), body, {
-        headers: headers
-      })
-      .map(res => res.json())
+      this.api.request('user.login', 'POST', this.form.value)
       .catch(Helper.getFormHandleError)
       .subscribe((response: any) => {
         if (+response.status === 200) {

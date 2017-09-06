@@ -7,8 +7,9 @@ describe('instaface App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display footer', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    expect(page.getFooterParagraphElements().count()).toBe(2);
+    expect(page.getFooterParagraphElement().getText()).toBe('Hand crafted with love by euclid1990 and our awesome contributors.');
   });
 });
