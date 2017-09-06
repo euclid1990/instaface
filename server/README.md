@@ -11,5 +11,11 @@ pip3 install -r requirements.txt
 # Start web server
 
 ```
-python3 app.py
+python3 run.py
+```
+
+# Debug
+
+```
+import pdb; pdb.set_trace();
 ```
