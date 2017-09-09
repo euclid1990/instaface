@@ -14,14 +14,14 @@ class User(Base):
     password = sa.Column(sa.String(60), nullable=False)
     birthday = sa.Column(sa.Date());
     phone = sa.Column(sa.String(15))
-    gender = sa.Column(sa.SmallInteger(), default=GENDER.UNKNOWN)
-    status = sa.Column(sa.SmallInteger(), default=STATUS.INACTIVE)
+    gender = sa.Column(sa.SmallInteger(), default=GENDER['UNKNOWN'])
+    status = sa.Column(sa.SmallInteger(), default=STATUS['INACTIVE'])
     about = sa.Column(sa.Text(500))
     active_token = sa.Column(sa.String(255))
     jwt_token = sa.Column(sa.Text(300))
-    password_changed_at = sa.Column(sa.Datetime())
-    logged_in_at = sa.Column(sa.Datetime())
-    logged_out_at = sa.Column(sa.Datetime())
+    password_changed_at = sa.Column(sa.DateTime())
+    logged_in_at = sa.Column(sa.DateTime())
+    logged_out_at = sa.Column(sa.DateTime())
 
     def __init__(self, arg):
         super().__init__()

@@ -1,4 +1,4 @@
-from app import app, sa
+from app import app, sa, models
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
