@@ -9,8 +9,7 @@ class Base(sa.Model):
     updated_at = sa.Column(sa.DateTime())
     deleted_at = sa.Column(sa.DateTime())
 
-    def __init__(self, arg):
-        self.arg = arg
+    def __init__(self):
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
         self.deleted_at = datetime.utcnow()

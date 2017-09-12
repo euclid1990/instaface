@@ -1,4 +1,4 @@
-from app import sa
+from app import sa, bcrypt
 from datetime import datetime
 from .base import Base
 
@@ -10,7 +10,7 @@ class User(Base):
     id = sa.Column(sa.Integer, primary_key=True)
     name = sa.Column(sa.String(50), nullable=False)
     username = sa.Column(sa.String(30), unique=True)
-    email = sa.Column(sa.String(255), unique=True)
+    email = sa.Column(sa.String(255), unique=True, nullable=False)
     password = sa.Column(sa.String(60), nullable=False)
     birthday = sa.Column(sa.Date());
     phone = sa.Column(sa.String(15))
@@ -23,6 +23,16 @@ class User(Base):
     logged_in_at = sa.Column(sa.DateTime())
     logged_out_at = sa.Column(sa.DateTime())
 
-    def __init__(self, arg):
+    fillable = ['name', 'username', 'email', 'password', 'phone', 'gender', 'status', 'about']
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            if key in self.fillable:
+                setattr(self, key, value)
         super().__init__()
-        self.arg = arg
+
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password)
+
+    def check_password(self, input_password):
+        return bcrypt.check_password_hash(self.password, input_password)

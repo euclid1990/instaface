@@ -23,6 +23,12 @@ python3 -m manage db migrate
 python3 -m manage db upgrade
 ```
 
+## Seeding database with test data commands
+
+```
+python3 -m manage db seed
+```
+
 ## Start web server
 
 ```
