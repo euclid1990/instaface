@@ -16,4 +16,3 @@ from app.views import home
 from app.views import auth
 app.register_blueprint(home.mod)
 app.register_blueprint(auth.mod)
-

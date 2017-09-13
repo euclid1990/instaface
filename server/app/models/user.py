@@ -1,8 +1,8 @@
 from app import sa, bcrypt
 from datetime import datetime
-from .base import Base
+from .base import (Base, Mixin)
 
-class User(Base):
+class User(Base, Mixin):
     GENDER = {'UNKNOWN': 0, 'MALE': 1, 'FEMALE': 2}
     STATUS = {'INACTIVE': 0, 'ACTIVE': 1, 'BANNED': 2}
 
@@ -26,10 +26,7 @@ class User(Base):
     fillable = ['name', 'username', 'email', 'password', 'phone', 'gender', 'status', 'about']
 
     def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            if key in self.fillable:
-                setattr(self, key, value)
-        super().__init__()
+        super().__init__(**kwargs)
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password)
