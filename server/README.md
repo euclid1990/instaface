@@ -6,7 +6,7 @@ Architecture: Using blueprints with functional structure
 ## Install Python projects dependencies
 
 ```
-pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 ## Install new packages and save it in requirements.txt
@@ -18,15 +18,15 @@ pip3 install [package_name] && pip3 freeze > requirements.txt
 ## Database migration commands
 
 ```
-python3 -m manage db init
-python3 -m manage db migrate
-python3 -m manage db upgrade
+$ python3 -m manage db init
+$ python3 -m manage db migrate
+$ python3 -m manage db upgrade
 ```
 
 ## Seeding database with test data commands
 
 ```
-python3 -m manage db seed
+$ python3 -m manage db seed
 ```
 
 ## Start web server
@@ -37,6 +37,12 @@ python3 run.py
 
 ## Debug
 
-```
+```python
 import pdb; pdb.set_trace();
+```
+
+## Remove all pycache
+
+```
+$ find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
 ```

@@ -1,3 +1,6 @@
+# Prevented from writing .pyc or .pyo files and __pycache__ folders
+import sys; sys.dont_write_bytecode = True
+
 from app import app
 
 if __name__ == "__main__":
