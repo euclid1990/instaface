@@ -7,11 +7,11 @@ def make_response(f):
     @wraps(f)
     def wrapper(*a, status=200):
         result = f(*a)
+        # Incoming request parameters do not pass the given validation rules
         if (isinstance(result, FlaskForm)):
             status = 400
-            return jsonify({'success': False, 'messages': [], 'errors': result.errors}), status
-        else:
-            return jsonify({'success': True, 'messages': [result], 'errors': []})
+            return jsonify({'success': False, 'errors': result.errors}), status
+        return jsonify({'success': True, 'message': result.get('message'), 'data': result.get('data')}), status
     return wrapper
 
 
@@ -29,5 +29,5 @@ def custom_handle_http_exception(app):
     @wraps(handle_http_exception)
     def handle(exception):
         h = handle_http_exception(exception)
-        return jsonify({'success': False, 'messages': [h.description]}), h.code
+        return jsonify({'success': False, 'messages': h.description}), h.code
     return handle

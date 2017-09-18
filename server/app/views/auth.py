@@ -10,11 +10,10 @@ Form = AuthForm()
 @mod.route('/register', methods=['POST'])
 @make_response
 def register():
-    abort(402)
     form = Form.Register()
     if form.validate_on_submit():
-        result = User.updateById(50, dict(email='username_email@example.com'))
-        return 'You have successfully registered.'
+        result = User.create(dict(name="123", email='66sssdddssdsdssss66@example.com', password="123456"))
+        return {'message': "", 'data': {'user': User.json(result)}}
     return form
 
 @mod.route('/login')

@@ -1,5 +1,6 @@
 from app import sa, bcrypt
 from datetime import datetime
+from marshmallow_sqlalchemy import ModelSchema
 from .base import (Base, Mixin)
 
 class User(Base, Mixin):
@@ -33,3 +34,12 @@ class User(Base, Mixin):
 
     def check_password(self, input_password):
         return bcrypt.check_password_hash(self.password, input_password)
+
+    @staticmethod
+    def json(object):
+        output = ('id', 'username', 'email', 'status', 'created_at', 'updated_at', 'deleted_at')
+        return Mixin.dump(UserSchema, object, output)
+
+class UserSchema(ModelSchema):
+    class Meta:
+        model = User

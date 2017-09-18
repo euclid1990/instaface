@@ -21,10 +21,21 @@ class Base(sa.Model):
                 setattr(self, key, value)
 
 class Mixin(object):
+    # Serializing objects (“Dumping”)
+    @staticmethod
+    def dump(Schema, object, only=()):
+        schema = Schema(only=only)
+        result = schema.dump(object)
+        return result.data
+
     # Create new record
     @classmethod
     def create(cls, data):
-        return sa.session.execute(cls.__table__.insert().values(data)).close()
+        data = dict((key, value) for (key, value) in data.items() if (key in cls.fillable))
+        record = cls(**data)
+        sa.session.add(record)
+        sa.session.commit()
+        return record
 
     # Update record by id
     @classmethod
