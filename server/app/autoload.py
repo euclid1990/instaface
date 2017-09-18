@@ -10,6 +10,7 @@ class Autoload:
     def run(self):
         self.dotenv()
         self.config()
+        self.app.config['WTF_CSRF_ENABLED'] = False
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         self.app.config['SQLALCHEMY_DATABASE_URI'] = self.mysql_uri()
 

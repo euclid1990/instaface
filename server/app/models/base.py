@@ -21,11 +21,18 @@ class Base(sa.Model):
                 setattr(self, key, value)
 
 class Mixin(object):
+    # Create new record
+    @classmethod
+    def create(cls, data):
+        return sa.session.execute(cls.__table__.insert().values(data)).close()
+
     # Update record by id
     @classmethod
     def updateById(cls, id, data):
         data.update(dict(updated_at=datetime.utcnow()))
-        return cls.query.filter_by(id=1).update(data)
+        result = cls.query.filter_by(id=1).update(data)
+        sa.session.commit()
+        return result
 
     @staticmethod
     def _before_insert(mapper, connection, target):

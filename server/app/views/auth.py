@@ -1,18 +1,21 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, request, jsonify, abort
 from app import sa
 from app.models import User
+from app.forms import AuthForm
+from app.utils import make_response
 
 mod = Blueprint('auth', __name__, url_prefix='/auth')
+Form = AuthForm()
 
-@mod.route('/register')
+@mod.route('/register', methods=['POST'])
+@make_response
 def register():
-    try:
-        User.updateById(1, dict(email='username_email@example.com'))
-        sa.session.commit()
-    except Exception as e:
-        msg = getattr(e, 'message', repr(e))
-        return msg
-    return 'Register'
+    abort(402)
+    form = Form.Register()
+    if form.validate_on_submit():
+        result = User.updateById(50, dict(email='username_email@example.com'))
+        return 'You have successfully registered.'
+    return form
 
 @mod.route('/login')
 def login():

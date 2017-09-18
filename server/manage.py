@@ -1,3 +1,6 @@
+# Prevented from writing .pyc or .pyo files and __pycache__ folders
+import sys; sys.dont_write_bytecode = True
+
 from app import app, sa, models
 from app.console.commands import SeedCommand
 from flask_script import Manager
