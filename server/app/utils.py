@@ -1,6 +1,7 @@
 from flask import jsonify
 from flask_wtf import FlaskForm
 from functools import wraps
+from werkzeug.exceptions import HTTPException, default_exceptions, _aborter
 
 def make_response(f):
     @wraps(f)
@@ -12,6 +13,15 @@ def make_response(f):
         else:
             return jsonify({'success': True, 'messages': [result], 'errors': []})
     return wrapper
+
+
+def register_missing_exception():
+    class FourZeroTwoException(HTTPException):
+        code = 402
+        description = "Payment Required"
+
+    default_exceptions[402] = FourZeroTwoException
+    _aborter.mapping[402] = FourZeroTwoException
 
 def custom_handle_http_exception(app):
     """Overrides the default http exception handler to return JSON."""

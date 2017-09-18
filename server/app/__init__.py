@@ -2,11 +2,16 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from .autoload import Autoload
-from .utils import custom_handle_http_exception
+from .utils import register_missing_exception, custom_handle_http_exception
 
 app = Flask(__name__)
+
+# Handle missing 402 in default exception
+register_missing_exception()
+# Overrides the default http exception handler
 app.handle_http_exception = custom_handle_http_exception(app)
 
+# Run autoload configuration
 auto = Autoload(app)
 auto.run()
 
