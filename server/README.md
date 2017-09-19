@@ -26,7 +26,7 @@ $ python3 -m manage db upgrade
 ## Seeding database with test data commands
 
 ```
-$ python3 -m manage db seed
+$ python3 -m manage db seed [--drop]
 ```
 
 ## Start web server

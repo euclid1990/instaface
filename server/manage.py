@@ -11,8 +11,8 @@ manager = Manager(app)
 
 # Add database seeder command line
 @MigrateCommand.command
-def seed():
-    SeedCommand.run()
+def seed(drop=False):
+    SeedCommand.run(drop)
 
 manager.add_command('db', MigrateCommand)
 
