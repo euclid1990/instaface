@@ -13,21 +13,32 @@ class Base(sa.Model):
     deleted_at = sa.Column(sa.DateTime())
     deleted_at._creation_order=999
 
+    schema = None
     fillable = []
+    output = []
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             if key in self.fillable:
                 setattr(self, key, value)
 
-class Mixin(object):
+    @classmethod
+    def set_schema(cls):
+        pass
+
     # Serializing objects (“Dumping”)
-    @staticmethod
-    def dump(Schema, object, only=()):
+    @classmethod
+    def dump(cls, Schema, obj, only=()):
         schema = Schema(only=only)
-        result = schema.dump(object)
+        result = schema.dump(obj)
         return result.data
 
+    @classmethod
+    def json(cls, object):
+        cls.set_schema()
+        return cls.dump(cls.schema, object, cls.output)
+
+class Mixin(object):
     # Create new record
     @classmethod
     def create(cls, data):

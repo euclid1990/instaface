@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, abort
 from app import sa
 from app.models import User
 from app.forms import AuthForm
-from app.utils import make_response
+from app.common import make_response
 
 mod = Blueprint('auth', __name__, url_prefix='/auth')
 Form = AuthForm()
@@ -12,13 +12,23 @@ Form = AuthForm()
 def register():
     form = Form.Register()
     if form.validate_on_submit():
-        result = User.create(dict(name="123", email='66sssdddssdsdssss66@example.com', password="123456"))
+        import random
+        num = random.choice(list(x for x in range(100)))
+        result = User.create(dict(name=request.form['name'], email=request.form['email'].format(num), password=request.form['password']))
         return {'message': "", 'data': {'user': User.json(result)}}
     return form
 
-@mod.route('/login')
+@mod.route('/login', methods=['POST'])
+@make_response
 def login():
-    return 'Login'
+    form = Form.Login()
+    if form.validate_on_submit():
+        email, password = request.form['email'], request.form['password']
+        result = User.attempt_login(email, password)
+        if result is None:
+            return {'success': False, 'message': "These credentials do not match our records.", 'data': {}}
+        return {'message': "", 'data': {'user': User.json(result)}}
+    return form
 
 @mod.route('/logout')
 def logout():

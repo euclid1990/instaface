@@ -25,6 +25,7 @@ class User(Base, Mixin):
     logged_out_at = sa.Column(sa.DateTime())
 
     fillable = ['name', 'username', 'email', 'password', 'phone', 'gender', 'status', 'about']
+    output = ('id', 'username', 'email', 'phone', 'gender', 'status', 'about', 'created_at', 'updated_at', 'deleted_at')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -35,10 +36,19 @@ class User(Base, Mixin):
     def check_password(self, input_password):
         return bcrypt.check_password_hash(self.password, input_password)
 
-    @staticmethod
-    def json(object):
-        output = ('id', 'username', 'email', 'status', 'created_at', 'updated_at', 'deleted_at')
-        return Mixin.dump(UserSchema, object, output)
+    @classmethod
+    def set_schema(cls):
+        cls.schema = UserSchema
+
+    @classmethod
+    def attempt_login(cls, email, password):
+        print(email)
+        user = User.query.filter_by(email=email).first()
+        if user is not None:
+            return user
+        else:
+            return None
+
 
 class UserSchema(ModelSchema):
     class Meta:
