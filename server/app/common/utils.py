@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from functools import wraps
 from werkzeug.exceptions import HTTPException, default_exceptions, _aborter
 from sqlalchemy.exc import DatabaseError, IntegrityError, OperationalError, StatementError
-
+from marshmallow_sqlalchemy import ModelConversionError, ModelSchema
 
 def make_response(f):
     @wraps(f)
@@ -47,3 +47,37 @@ def error_handle(error):
     else:
         message = getattr(error, 'message', None)
     return jsonify({'success': False, 'message': message}), status
+
+# Dynamically generate marshmallow schemas for SQLAlchemy models
+def setup_schema(Base, session):
+    from app.models.schemas import (
+        UserSchema,
+        UserAccessTokenSchema,
+        PasswordResetSchema,
+        RoleSchema,
+        UserRoleSchema,
+        GroupSchema,
+        UserGroupSchema,
+    )
+    for class_ in Base._decl_class_registry.values():
+        if hasattr(class_, '__tablename__'):
+            if class_.__name__.endswith('Schema'):
+                raise ModelConversionError(
+                    "For safety, setup_schema can not be used when a Model class ends with 'Schema'"
+                )
+            class Meta(object):
+                model = class_
+                sqla_session = session
+            schema_class_name = '{0}Schema'.format(class_.__name__)
+            try:
+                schema_class = locals()[schema_class_name]
+                setattr(class_, 'schema', schema_class)
+            except KeyError as e:
+                print("Class {0} not found.".format(str(e)))
+
+
+
+
+
+
+

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, abort
-from app import sa
+from app import sa, jwt, jwt_required
 from app.models import User
 from app.forms import AuthForm
 from app.common import make_response
@@ -14,7 +14,9 @@ def register():
     if form.validate_on_submit():
         import random
         num = random.choice(list(x for x in range(100)))
-        result = User.create(dict(name=request.form['name'], email=request.form['email'].format(num), password=request.form['password']))
+        name, email, password = request.form['name'], request.form['email'].format(num), request.form['password']
+
+        result = User.create(dict(name=name, email=email, password=password))
         return {'message': "", 'data': {'user': User.json(result)}}
     return form
 

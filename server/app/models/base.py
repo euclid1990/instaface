@@ -22,20 +22,16 @@ class Base(sa.Model):
             if key in self.fillable:
                 setattr(self, key, value)
 
-    @classmethod
-    def set_schema(cls):
-        pass
-
     # Serializing objects (“Dumping”)
     @classmethod
     def dump(cls, Schema, obj, only=()):
         schema = Schema(only=only)
+        print(schema)
         result = schema.dump(obj)
         return result.data
 
     @classmethod
     def json(cls, object):
-        cls.set_schema()
         return cls.dump(cls.schema, object, cls.output)
 
 class Mixin(object):
@@ -58,9 +54,10 @@ class Mixin(object):
 
     @staticmethod
     def _before_insert(mapper, connection, target):
-        print("Hook before insert")
+        # print("Hook before insert")
+        pass
 
     @classmethod
     def __declare_last__(cls):
-        print("Define hook occurs after mappings are assumed to be completed")
+        # print("Define hook occurs after mappings are assumed to be completed")
         event.listen(cls, 'before_insert', cls._before_insert)

@@ -17,6 +17,6 @@ class UserFactory(BaseFactory):
     username = factory.Faker('user_name')
     email = factory.LazyAttributeSequence(lambda o, n: "{username}{id}@example.com".format(username=o.username, id=n))
     password = factory.PostGenerationMethodCall('set_password', 'defaultPassword')
-    gender = random.choice(list(models.User.GENDER.values()))
-    status = random.choice(list(models.User.STATUS.values()))
+    gender = factory.Faker('random_element', elements=list(models.User.GENDER.values()))
+    status = factory.Faker('random_element', elements=list(models.User.STATUS.values()))
     about = factory.Faker('text', max_nb_chars=300)

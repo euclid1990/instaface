@@ -8,6 +8,7 @@ factory-boy==2.9.2
 Faker==0.8.3
 Flask==0.12.2
 Flask-Bcrypt==0.7.1
+Flask-JWT-Extended==3.3.1
 Flask-Migrate==2.1.1
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.2
@@ -20,6 +21,7 @@ MarkupSafe==1.0
 marshmallow==2.13.6
 marshmallow-sqlalchemy==0.13.1
 pycparser==2.18
+PyJWT==1.5.3
 PyMySQL==0.7.11
 python-dateutil==2.6.1
 python-dotenv==0.6.5
