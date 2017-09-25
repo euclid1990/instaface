@@ -21,7 +21,6 @@ class UserRole(Base, Mixin):
     output = ('id', 'user_id', 'role_id')
 
     def __init__(self, **kwargs):
-        print(kwargs)
         super().__init__(**kwargs)
 
     @classmethod

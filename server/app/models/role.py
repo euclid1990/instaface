@@ -13,7 +13,6 @@ class Role(Base, Mixin):
     # users = sa.relationship("UserRole", back_populates="role")
     users = sa.relationship('User', secondary='user_roles', viewonly=True)
 
-
     fillable = ['name', 'code']
     output = ('id', 'name', 'code')
 

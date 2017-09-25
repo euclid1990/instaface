@@ -27,8 +27,10 @@ class User(Base, Mixin):
     # roles = sa.relationship("UserRole", back_populates="user")
     roles = sa.relationship('Role', secondary='user_roles', viewonly=True)
 
+    groups = sa.relationship('Group', secondary='user_groups', viewonly=True)
+
     fillable = ['name', 'username', 'email', 'password', 'phone', 'gender', 'status', 'about']
-    output = ('id', 'username', 'email', 'phone', 'gender', 'status', 'about', 'roles', 'created_at', 'updated_at', 'deleted_at')
+    output = ('id', 'username', 'email', 'phone', 'gender', 'status', 'about', 'roles', 'groups', 'created_at', 'updated_at', 'deleted_at')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

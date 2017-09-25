@@ -9,6 +9,8 @@ class Group(Base, Mixin):
     name = sa.Column(sa.String(50), nullable=False)
     code = sa.Column(sa.SmallInteger(), unique=True)
 
+    users = sa.relationship('User', secondary='user_groups', viewonly=True)
+
     fillable = ['name', 'code']
     output = ('id', 'name')
 

@@ -3,7 +3,7 @@ from app import app, sa
 from database.seeds import (
     UserSeeder,
     RoleSeeder,
-    # GroupSeeder,
+    GroupSeeder,
     UserRoleSeeder,
     UserGroupSeeder,
 )
@@ -17,11 +17,9 @@ class SeedCommand(object):
             sa.drop_all(bind=None)
             sa.create_all(bind=None)
 
-        # RoleSeeder.exec()
-        # GroupSeeder.exec()
-        # UserSeeder.exec()
-        UserRoleSeeder.exec()
-        # UserGroupSeeder.exec()
+        roles = RoleSeeder.exec()
+        groups = GroupSeeder.exec()
+        users = UserSeeder.exec(user_roles=roles, user_groups=groups)
 
         sa.session.commit()
         print("------ [COMPLETE] Database seeding ------")

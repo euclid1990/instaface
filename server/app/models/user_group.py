@@ -9,7 +9,11 @@ class UserGroup(Base, Mixin):
     user_id = sa.Column(sa.Integer, sa.ForeignKey('users.id'), nullable=False)
     group_id = sa.Column(sa.Integer, sa.ForeignKey('groups.id'), nullable=False)
 
-    fillable = ['user_id', 'group_id']
+    # Define a bidirectional relationship in many-to-many with secondary
+    user = sa.relationship('User', backref=sa.backref("user_groups"))
+    group = sa.relationship('Group', backref=sa.backref("user_groups"))
+
+    fillable = ['user_id', 'group_id', 'user', 'group']
     output = ('id', 'user_id', 'group_id')
 
     def __init__(self, **kwargs):
