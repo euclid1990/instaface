@@ -10,8 +10,8 @@ class UserGroup(Base, Mixin):
     group_id = sa.Column(sa.Integer, sa.ForeignKey('groups.id'), nullable=False)
 
     # Define a bidirectional relationship in many-to-many with secondary
-    user = sa.relationship('User', backref=sa.backref("user_groups"))
-    group = sa.relationship('Group', backref=sa.backref("user_groups"))
+    user = sa.relationship('User', primaryjoin="and_(UserGroup.user_id == User.id, UserGroup.deleted_at == None)", backref=sa.backref("user_groups"))
+    group = sa.relationship('Group', primaryjoin="and_(UserGroup.group_id == Group.id, UserGroup.deleted_at == None)", backref=sa.backref("user_groups"))
 
     fillable = ['user_id', 'group_id', 'user', 'group']
     output = ('id', 'user_id', 'group_id')

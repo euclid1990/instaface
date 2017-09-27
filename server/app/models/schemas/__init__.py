@@ -13,6 +13,7 @@ from app.models import (
 class UserSchema(ModelSchema):
     # Avoid infinite recursion
     roles = fields.Nested('RoleSchema', many=True, only=('id', 'name', 'code'), exclude=('users', 'user_roles'))
+    groups = fields.Nested('GroupSchema', many=True, only=('id', 'name', 'code'), exclude=('users', 'user_groups'))
     class Meta:
         model = User
 
@@ -45,5 +46,7 @@ class GroupSchema(ModelSchema):
 
 
 class UserGroupSchema(ModelSchema):
+    # Avoid infinite recursion
+    users = fields.Nested('UserSchema', many=True, only=('id', 'name', 'email'), exclude=('groups', 'user_groups'))
     class Meta:
         model = UserGroup

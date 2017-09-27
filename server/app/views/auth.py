@@ -16,7 +16,7 @@ def register():
         num = random.choice(list(x for x in range(100)))
         name, email, password = request.form['name'], request.form['email'].format(num), request.form['password']
 
-        result = User.create(dict(name=name, email=email, password=password))
+        result = User.register(dict(name=name, email=email, password=password))
         return {'message': "", 'data': {'user': User.json(result)}}
     return form
 
@@ -34,6 +34,7 @@ def login():
 
 @mod.route('/logout')
 def logout():
+    User.change_group(18, 2)
     return 'Logout'
 
 @mod.route('/forgot')

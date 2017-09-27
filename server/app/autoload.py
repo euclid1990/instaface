@@ -11,6 +11,8 @@ class Autoload:
         self.dotenv()
         self.config()
         self.app.config['WTF_CSRF_ENABLED'] = False
+        # Display SQL queries for debug
+        self.app.config['SQLALCHEMY_ECHO'] = True
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         self.app.config['SQLALCHEMY_DATABASE_URI'] = self.mysql_uri()
 

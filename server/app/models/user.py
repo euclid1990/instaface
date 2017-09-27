@@ -1,7 +1,12 @@
-from app import sa, bcrypt
 from datetime import datetime
 from marshmallow import fields
+from app import sa, bcrypt
+from app.common import Constants
 from .base import (Base, Mixin)
+from .role import Role
+from .user_role import UserRole
+from .group import Group
+from .user_group import UserGroup
 
 class User(Base, Mixin):
     GENDER = {'UNKNOWN': 0, 'MALE': 1, 'FEMALE': 2}
@@ -29,7 +34,7 @@ class User(Base, Mixin):
 
     groups = sa.relationship('Group', secondary='user_groups', viewonly=True)
 
-    fillable = ['name', 'username', 'email', 'password', 'phone', 'gender', 'status', 'about']
+    fillable = ['name', 'username', 'email', 'password', 'birthday', 'phone', 'gender', 'status', 'about']
     output = ('id', 'username', 'email', 'phone', 'gender', 'status', 'about', 'roles', 'groups', 'created_at', 'updated_at', 'deleted_at')
 
     def __init__(self, **kwargs):
@@ -42,11 +47,38 @@ class User(Base, Mixin):
         return bcrypt.check_password_hash(self.password, input_password)
 
     @classmethod
+    def register(cls, data):
+        data = dict((key, value) for (key, value) in data.items() if (key in cls.fillable))
+        user = cls(**data)
+        # Assign role to user
+        role = Role.query.filter_by(code=Constants.ROLE_MEMBER_CODE, deleted_at=None).first()
+        user.user_roles.append(UserRole(user=user, role=role))
+        # Commit user to DB
+        sa.session.add(user)
+        sa.session.commit()
+        return user
+
+    @classmethod
     def attempt_login(cls, email, password):
-        print(email)
         user = User.query.filter_by(email=email).first()
         print(user)
         if user is not None:
             return user
         else:
             return None
+
+    @classmethod
+    def change_group(cls, id, group_code):
+        user = User.query.filter_by(id=id, deleted_at=None).first()
+        group = Group.query.filter_by(code=group_code, deleted_at=None).first()
+        if user and group:
+            # Assign group to user
+            has_group = user.groups
+            # import pdb; pdb.set_trace();
+            if not has_group:
+                user.user_groups.append(UserGroup(user=user, group=group))
+            else:
+                user.user_groups[0].query.filter_by(id=user.id).update(dict(group_id=group.id))
+            sa.session.commit()
+            return True
+        return False
