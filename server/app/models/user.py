@@ -1,5 +1,6 @@
 from datetime import datetime
 from marshmallow import fields
+from sqlalchemy.ext.hybrid import hybrid_property
 from app import sa, bcrypt
 from app.common import Constants
 from .base import (Base, Mixin)
@@ -17,7 +18,7 @@ class User(Base, Mixin):
     name = sa.Column(sa.String(50), nullable=False)
     username = sa.Column(sa.String(30), unique=True)
     email = sa.Column(sa.String(255), unique=True, nullable=False)
-    password = sa.Column(sa.String(60), nullable=False)
+    _password = sa.Column('password', sa.String(60), nullable=False)
     birthday = sa.Column(sa.Date());
     phone = sa.Column(sa.String(15))
     gender = sa.Column(sa.SmallInteger(), default=GENDER['UNKNOWN'])
@@ -40,10 +41,17 @@ class User(Base, Mixin):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+    # Hybrid Value pattern for auto encrypted passwords
+    @hybrid_property
+    def password(self):
+        return self._password
+
+    @password.setter
     def set_password(self, password):
-        self.password = bcrypt.generate_password_hash(password)
+        self._password = bcrypt.generate_password_hash(password)
 
     def check_password(self, input_password):
+        print(self.password)
         return bcrypt.check_password_hash(self.password, input_password)
 
     @classmethod
@@ -61,8 +69,7 @@ class User(Base, Mixin):
     @classmethod
     def attempt_login(cls, email, password):
         user = User.query.filter_by(email=email).first()
-        print(user)
-        if user is not None:
+        if user is not None and user.check_password(password):
             return user
         else:
             return None
