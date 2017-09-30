@@ -75,9 +75,14 @@ def setup_schema(Base, session):
             except KeyError as e:
                 print("Class {0} not found.".format(str(e)))
 
+# Implement when no JWT is received callback
+def jwt_unauthorized_loader(err):
+    return jsonify({'success': False, 'message': "Missing authorization header"}), 400
 
+# Implement invalid JWT is received callback
+def jwt_invalid_token_loader(err):
+    return jsonify({'success': False, 'message': "Invalid access token"}), 400
 
-
-
-
-
+# Implement invalid JWT callback
+def jwt_expired_token_loader():
+    return jsonify({'success': False, 'message': "Access token has expired"}), 400

@@ -3,13 +3,16 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.orm import mapper
-from flask_jwt_extended import JWTManager, jwt_required
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from .autoload import Autoload
 from app.common import (
     register_missing_exception,
     custom_handle_http_exception,
     error_handle,
     setup_schema,
+    jwt_expired_token_loader,
+    jwt_invalid_token_loader,
+    jwt_unauthorized_loader,
 )
 
 app = Flask(__name__)
@@ -30,6 +33,18 @@ if app.config['APP'].APP_ENV == "production":
 
 # Setup the Flask-JWT-Extended extension
 jwt = JWTManager(app)
+
+@jwt.unauthorized_loader
+def _(err):
+    return jwt_unauthorized_loader(err)
+
+@jwt.invalid_token_loader
+def _(err):
+    return jwt_invalid_token_loader(err)
+
+@jwt.expired_token_loader
+def _():
+    return jwt_expired_token_loader()
 
 # Setup the Bcrypt extension
 bcrypt = Bcrypt(app)

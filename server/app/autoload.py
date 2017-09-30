@@ -11,6 +11,8 @@ class Autoload:
         self.dotenv()
         self.config()
         self.app.config['WTF_CSRF_ENABLED'] = False
+        # The JWT secret key needed for symmetric based signing algorithms, such as HS*
+        self.app.config['SECRET_KEY'] = self.app.config['APP'].APP_KEY
         # Display SQL queries for debug
         self.app.config['SQLALCHEMY_ECHO'] = True
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

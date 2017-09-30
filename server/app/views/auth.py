@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, abort
 from app import sa, jwt, jwt_required
-from app.models import User
+from app.models import User, UserAccessToken
 from app.forms import AuthForm
 from app.common import make_response
 
@@ -17,7 +17,7 @@ def register():
         name, email, password = request.form['name'], request.form['email'].format(num), request.form['password']
 
         result = User.register(dict(name=name, email=email, password=password))
-        return {'message': "", 'data': {'user': User.json(result)}}
+        return {'message': "You have registered successfully.", 'data': {'user': User.json(result)}}
     return form
 
 @mod.route('/login', methods=['POST'])
@@ -29,13 +29,15 @@ def login():
         result = User.attempt_login(email, password)
         if result is None:
             return {'success': False, 'message': "These credentials do not match our records.", 'data': {}}
-        return {'message': "", 'data': {'user': User.json(result)}}
+        access_token = UserAccessToken.create(user_id=result.id)
+        return {'message': "You have logged in successfully.", 'data': {'access_token': access_token}}
     return form
 
 @mod.route('/logout')
+@jwt_required
+@make_response
 def logout():
-    User.change_group(18, 2)
-    return 'Logout'
+    return {'message': "You have logged out successfully.", 'data': {}}
 
 @mod.route('/forgot')
 def forgot():
