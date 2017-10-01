@@ -1,0 +1,4 @@
+import os
+
+JWT_BLACKLIST_ENABLED = os.environ.get('JWT_BLACKLIST_ENABLED')
+JWT_BLACKLIST_TOKEN_CHECKS = os.environ.get('JWT_BLACKLIST_TOKEN_CHECKS').split(',')

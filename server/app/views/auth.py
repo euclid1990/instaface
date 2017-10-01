@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, abort
-from app import sa, jwt, jwt_required
+from app import sa, jwt, jwt_required, get_jwt_identity
 from app.models import User, UserAccessToken
 from app.forms import AuthForm
 from app.common import make_response
