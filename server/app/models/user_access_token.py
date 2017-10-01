@@ -30,17 +30,25 @@ class UserAccessToken(Base, Mixin):
         cls.schema = UserAccessTokenSchema
 
     @classmethod
-    def create(cls, user_id):
+    def create(cls, user_id, with_refresh_token=False):
         expires = timedelta(days=7)
-        access_token = create_access_token(identity=user_id, expires_delta=expires, fresh=True)
-        refresh_token = create_refresh_token(identity=user_id)
-        decoded_token = decode_token(access_token)
+        access_token = create_access_token(identity=user_id, expires_delta=expires, fresh=with_refresh_token)
+        cls.save_encoded_token(access_token)
+        if with_refresh_token:
+            refresh_token = create_refresh_token(identity=user_id)
+            cls.save_encoded_token(refresh_token)
+            return access_token, refresh_token
+        return access_token
+
+    @classmethod
+    def save_encoded_token(cls, token):
+        decoded_token = decode_token(token)
+        user_id = decoded_token['identity']
         jti = decoded_token['jti']
         token_type = decoded_token['type']
-        fresh = decoded_token['fresh']
+        fresh = decoded_token.get('fresh', False)
         expires = datetime.fromtimestamp(decoded_token['exp'])
-        super().create(dict(user_id=user_id, jti=jti, token_type=token_type, fresh=fresh, expires=expires, encoded=access_token))
-        return access_token, refresh_token
+        return super().create(dict(user_id=user_id, jti=jti, token_type=token_type, fresh=fresh, expires=expires, encoded=token))
 
     @classmethod
     def is_token_blacklisted(cls, decoded_token):
@@ -50,3 +58,9 @@ class UserAccessToken(Base, Mixin):
             return True
         is_deleted = access_token.deleted_at is not None
         return is_deleted
+
+    @classmethod
+    def add_token_to_blacklist(cls, jti):
+        result = cls.query.filter_by(jti=jti).update(dict(deleted_at=datetime.utcnow()))
+        sa.session.commit()
+        return result

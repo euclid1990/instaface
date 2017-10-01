@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, abort
-from app import sa, jwt, jwt_required, get_jwt_identity
+from app import sa, jwt, jwt_required, jwt_refresh_token_required, get_raw_jwt, get_jwt_identity
 from app.models import User, UserAccessToken
 from app.forms import AuthForm
 from app.common import make_response
@@ -29,7 +29,7 @@ def login():
         result = User.attempt_login(email, password)
         if result is None:
             return {'success': False, 'message': "These credentials do not match our records.", 'data': {}}
-        access_token, refresh_token = UserAccessToken.create(user_id=result.id)
+        access_token, refresh_token = UserAccessToken.create(user_id=result.id, with_refresh_token=True)
         return {'message': "You have logged in successfully.", 'data': {'access_token': access_token, 'refresh_token': refresh_token}}
     return form
 
@@ -37,7 +37,17 @@ def login():
 @jwt_required
 @make_response
 def logout():
-    return {'message': "You have logged out successfully.", 'data': {}}
+    jwt = get_raw_jwt()
+    result = UserAccessToken.add_token_to_blacklist(jwt['jti'])
+    return {'message': "You have logged out successfully.", 'data': {'result': result}}
+
+@mod.route('/refresh')
+@jwt_refresh_token_required
+@make_response
+def refresh():
+    user_id = get_jwt_identity()
+    access_token = UserAccessToken.create(user_id=user_id, with_refresh_token=False)
+    return {'message': "You have refreshed token successfully.", 'data': {'access_token': access_token}}
 
 @mod.route('/forgot')
 def forgot():
