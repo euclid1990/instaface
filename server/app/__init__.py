@@ -3,7 +3,13 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.orm import mapper
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import (
+    JWTManager,
+    jwt_required,
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+)
 from .autoload import Autoload
 from app.common import (
     register_missing_exception,
@@ -13,6 +19,8 @@ from app.common import (
     jwt_expired_token_loader,
     jwt_invalid_token_loader,
     jwt_unauthorized_loader,
+    jwt_revoked_token_loader,
+    jwt_token_in_blacklist_loader,
 )
 
 app = Flask(__name__)
@@ -31,6 +39,15 @@ if app.config['APP'].APP_ENV == "production":
     def _(error):
         return error_handle(error)
 
+# Setup the Bcrypt extension
+bcrypt = Bcrypt(app)
+
+# Setup the Flask-Sqlalchemy extension
+sa = SQLAlchemy(app)
+# Listen for the SQLAlchemy event and run setup_schema
+from app.models import Base
+event.listen(mapper, 'after_configured', setup_schema(Base, sa.session))
+
 # Setup the Flask-JWT-Extended extension
 jwt = JWTManager(app)
 
@@ -46,14 +63,15 @@ def _(err):
 def _():
     return jwt_expired_token_loader()
 
-# Setup the Bcrypt extension
-bcrypt = Bcrypt(app)
+@jwt.revoked_token_loader
+def _():
+    return jwt_revoked_token_loader()
 
-# Setup the Flask-Sqlalchemy extension
-sa = SQLAlchemy(app)
-# Listen for the SQLAlchemy event and run setup_schema
-from app.models import Base
-event.listen(mapper, 'after_configured', setup_schema(Base, sa.session))
+from app.models import UserAccessToken
+@jwt.token_in_blacklist_loader
+def _(decoded_token):
+    print(decoded_token)
+    return jwt_token_in_blacklist_loader(UserAccessToken, decoded_token)
 
 # Register all blueprints
 from app.views import home

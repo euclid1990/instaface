@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 4adc2b7759cd
+Revision ID: e76e15f63541
 Revises: 
-Create Date: 2017-09-21 17:52:54.721771
+Create Date: 2017-10-01 14:58:09.499951
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4adc2b7759cd'
+revision = 'e76e15f63541'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -50,12 +50,18 @@ def upgrade():
     op.create_table('user_access_tokens',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('value', sa.Text(length=300), nullable=True),
+    sa.Column('jti', sa.String(length=36), nullable=False),
+    sa.Column('token_type', sa.String(length=10), nullable=False),
+    sa.Column('expires', sa.DateTime(), nullable=False),
+    sa.Column('fresh', sa.Boolean(), nullable=True),
+    sa.Column('encoded', sa.Text(length=300), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index(op.f('ix_user_access_tokens_jti'), 'user_access_tokens', ['jti'], unique=True)
+    op.create_index('ix_user_access_tokens_user_id_jti', 'user_access_tokens', ['user_id', 'jti'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
@@ -108,6 +114,8 @@ def downgrade():
     op.drop_table('user_roles')
     op.drop_table('user_groups')
     op.drop_table('users')
+    op.drop_index('ix_user_access_tokens_user_id_jti', table_name='user_access_tokens')
+    op.drop_index(op.f('ix_user_access_tokens_jti'), table_name='user_access_tokens')
     op.drop_table('user_access_tokens')
     op.drop_table('roles')
     op.drop_table('password_resets')

@@ -29,8 +29,8 @@ def login():
         result = User.attempt_login(email, password)
         if result is None:
             return {'success': False, 'message': "These credentials do not match our records.", 'data': {}}
-        access_token = UserAccessToken.create(user_id=result.id)
-        return {'message': "You have logged in successfully.", 'data': {'access_token': access_token}}
+        access_token, refresh_token = UserAccessToken.create(user_id=result.id)
+        return {'message': "You have logged in successfully.", 'data': {'access_token': access_token, 'refresh_token': refresh_token}}
     return form
 
 @mod.route('/logout')

@@ -81,7 +81,6 @@ class User(Base, Mixin):
         if user and group:
             # Assign group to user
             has_group = user.groups
-            # import pdb; pdb.set_trace();
             if not has_group:
                 user.user_groups.append(UserGroup(user=user, group=group))
             else:
