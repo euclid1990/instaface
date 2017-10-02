@@ -1,3 +1,4 @@
+from uuid import uuid4
 from datetime import datetime
 from marshmallow import fields
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -35,7 +36,7 @@ class User(Base, Mixin):
 
     groups = sa.relationship('Group', secondary='user_groups', viewonly=True)
 
-    fillable = ['name', 'username', 'email', 'password', 'birthday', 'phone', 'gender', 'status', 'about']
+    fillable = ['name', 'username', 'email', 'password', 'birthday', 'phone', 'gender', 'status', 'about', 'active_token']
     output = ('id', 'username', 'email', 'phone', 'gender', 'status', 'about', 'roles', 'groups', 'created_at', 'updated_at', 'deleted_at')
 
     def __init__(self, **kwargs):
@@ -57,6 +58,7 @@ class User(Base, Mixin):
     @classmethod
     def register(cls, data):
         data = dict((key, value) for (key, value) in data.items() if (key in cls.fillable))
+        data['active_token'] = str(uuid4())
         user = cls(**data)
         # Assign role to user
         role = Role.query.filter_by(code=Constants.ROLE_MEMBER_CODE, deleted_at=None).first()
@@ -88,3 +90,9 @@ class User(Base, Mixin):
             sa.session.commit()
             return True
         return False
+
+    @classmethod
+    def active(cls, active_token):
+        result = User.query.filter_by(active_token=active_token, status=cls.STATUS['INACTIVE']).update(dict(status=cls.STATUS['ACTIVE']))
+        sa.session.commit()
+        return result

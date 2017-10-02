@@ -1,4 +1,5 @@
-from flask import jsonify
+from flask import jsonify, render_template
+from flask_mail import Message
 from flask_wtf import FlaskForm
 from functools import wraps
 from werkzeug.exceptions import HTTPException, default_exceptions, _aborter
@@ -7,8 +8,9 @@ from marshmallow_sqlalchemy import ModelConversionError, ModelSchema
 
 def make_response(f):
     @wraps(f)
-    def wrapper(*a, status=200):
-        result = f(*a)
+    def wrapper(*args, **kwargs):
+        status = 200
+        result = f(*args, **kwargs)
         # Incoming request parameters do not pass the given validation rules
         if (isinstance(result, FlaskForm)):
             status = 400
@@ -74,4 +76,14 @@ def setup_schema(Base, session):
                 setattr(class_, 'schema', schema_class)
             except KeyError as e:
                 print("Class {0} not found.".format(str(e)))
+
+def send_mail_util(mail, sender, to, subject, path_to_template, data):
+    template = render_template(path_to_template, data=data)
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=sender
+    )
+    mail.send(msg)
 

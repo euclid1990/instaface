@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
@@ -18,6 +19,7 @@ from app.common import (
     custom_handle_http_exception,
     error_handle,
     setup_schema,
+    send_mail_util,
     jwt_expired_token_loader,
     jwt_invalid_token_loader,
     jwt_unauthorized_loader,
@@ -74,6 +76,12 @@ from app.models import UserAccessToken
 def _(decoded_token):
     print(decoded_token)
     return jwt_token_in_blacklist_loader(UserAccessToken, decoded_token)
+
+# Setup the Flask-Mail extension
+mail = Mail(app)
+
+def send_mail(to, subject, path_to_template, data):
+    return send_mail_util(mail, app.config['MAIL_DEFAULT_SENDER'], to, subject, path_to_template, data)
 
 # Register all blueprints
 from app.views import home

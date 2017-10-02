@@ -1,0 +1,11 @@
+{% extends "email.html" %}
+
+{% block content %}
+    <h1 style="font-size:20px;color:rgb(40,40,40)">Welcome to Instaface!</h1>
+    <div>
+        <p>Thanks for signing up. To active your account, please verify your email address by clicking the link below.</p>
+        <strong>
+            <a href="{{ url_for('auth.active', active_token=data['active_token'], _external=True) }}" target="_blank">CONFIRM URL</a>
+        </strong>
+    </div>
+{% endblock %}

@@ -13,6 +13,7 @@ class Autoload:
         self.config_wtform()
         self.config_sqlalchemy()
         self.config_jwt()
+        self.config_mail()
 
     def dotenv(self):
         dotenv_path = os.path.join(Path(__file__).resolve().parents[1], '.env')
@@ -47,3 +48,12 @@ class Autoload:
         jwtEnv = self.app.config['JWT']
         self.app.config['JWT_BLACKLIST_ENABLED'] = jwtEnv.JWT_BLACKLIST_ENABLED
         self.app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = jwtEnv.JWT_BLACKLIST_TOKEN_CHECKS
+
+    def config_mail(self):
+        mailEnv = self.app.config['MAIL']
+        self.app.config['MAIL_SERVER'] = mailEnv.MAIL_SERVER
+        self.app.config['MAIL_PORT'] = mailEnv.MAIL_PORT
+        self.app.config['MAIL_USE_TLS'] = mailEnv.MAIL_USE_TLS
+        self.app.config['MAIL_USERNAME'] = mailEnv.MAIL_USERNAME
+        self.app.config['MAIL_PASSWORD'] = mailEnv.MAIL_PASSWORD
+        self.app.config['MAIL_DEFAULT_SENDER'] = mailEnv.MAIL_DEFAULT_SENDER

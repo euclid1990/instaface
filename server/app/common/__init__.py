@@ -5,6 +5,7 @@ from .utils import (
     custom_handle_http_exception,
     error_handle,
     setup_schema,
+    send_mail_util,
 )
 from .jwt_helpers import (
     jwt_expired_token_loader,
