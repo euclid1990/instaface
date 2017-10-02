@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-
+from .validators import Unique
 from app.common import Constants
+from app.models import User
 
 class AuthForm(object):
     class Register(FlaskForm):
@@ -10,7 +11,11 @@ class AuthForm(object):
             DataRequired(),
             Length(min=Constants.USER_NAME_MIN_LENGTH, max=Constants.USER_NAME_MAX_LENGTH)
         ])
-        email = StringField('Email', validators=[DataRequired(), Email()])
+        email = StringField('Email', validators=[
+            DataRequired(),
+            Email(),
+            Unique(User, User.email, message='There is already an account with that email.')
+        ])
         password = PasswordField('Password', validators=[
             DataRequired(),
             Length(min=Constants.USER_PASSWORD_MIN_LENGTH, max=Constants.USER_PASSWORD_MAX_LENGTH),
