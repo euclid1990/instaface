@@ -26,3 +26,12 @@ services:
       PMA_HOST: database
       PMA_USER: db_usr
       PMA_PASSWORD: db_pwd
+
+  redis:
+    image: bitnami/redis:4.0
+    volumes:
+      - ./database/redis:/bitnami
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=redis_pwd

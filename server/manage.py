@@ -2,7 +2,7 @@
 import sys; sys.dont_write_bytecode = True
 
 from app import app, sa
-from app.console.commands import SeedCommand
+from app.console.commands import SeedCommand, WorkerCommand
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
@@ -13,6 +13,10 @@ manager = Manager(app)
 @MigrateCommand.command
 def seed(drop=False):
     SeedCommand.run(drop)
+
+@manager.command
+def worker():
+    WorkerCommand.run()
 
 manager.add_command('db', MigrateCommand)
 

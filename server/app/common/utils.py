@@ -77,7 +77,7 @@ def setup_schema(Base, session):
             except KeyError as e:
                 print("Class {0} not found.".format(str(e)))
 
-def send_mail_util(mail, sender, to, subject, path_to_template, data):
+def send_mail_util(queue_mail, sender, to, subject, path_to_template, data):
     template = render_template(path_to_template, data=data)
     msg = Message(
         subject,
@@ -85,5 +85,5 @@ def send_mail_util(mail, sender, to, subject, path_to_template, data):
         html=template,
         sender=sender
     )
-    mail.send(msg)
+    queue_mail(msg)
 

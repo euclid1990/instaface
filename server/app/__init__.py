@@ -4,6 +4,8 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.orm import mapper
+from rq import Queue
+from redis import Redis
 from flask_jwt_extended import (
     JWTManager,
     jwt_required,
@@ -77,11 +79,17 @@ def _(decoded_token):
     print(decoded_token)
     return jwt_token_in_blacklist_loader(UserAccessToken, decoded_token)
 
+# Setup the RQ Redis extension
+redis_conn = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=0, password=app.config['REDIS_PASSWORD'])
+queue = Queue(connection=redis_conn)
+
 # Setup the Flask-Mail extension
 mail = Mail(app)
-
+sender = app.config['MAIL_DEFAULT_SENDER']
+def queue_mail(msg):
+    mail.send(msg)
 def send_mail(to, subject, path_to_template, data):
-    return send_mail_util(mail, app.config['MAIL_DEFAULT_SENDER'], to, subject, path_to_template, data)
+    return queue.enqueue(send_mail_util, queue_mail=queue_mail, sender=sender, to=to, subject=subject, path_to_template=path_to_template, data=data, timeout=300)
 
 # Register all blueprints
 from app.views import home
