@@ -29,6 +29,12 @@ $ python3 -m manage db upgrade
 $ python3 -m manage db seed [--drop]
 ```
 
+## Start queue worker
+
+```
+python3 -m manage worker
+```
+
 ## Start web server
 
 ```
