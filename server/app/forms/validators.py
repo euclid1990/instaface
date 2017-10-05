@@ -7,6 +7,18 @@ class Unique(object):
         self.message = message
 
     def __call__(self, form, field):
-        check = self.model.query.filter(self.field == field.data).first()
+        check = self.model.query.filter(self.field==field.data).first()
         if check:
+            raise ValidationError(self.message)
+
+
+class OldPassword(object):
+    def __init__(self, model, message="The password you entered does not match your old password."):
+        self.model = model
+        self.message = message
+
+    def __call__(self, form, field):
+        user_id = form.user_id
+        user = self.model.query.filter_by(id=user_id).first()
+        if user is None or user.check_password(field.data) is False:
             raise ValidationError(self.message)

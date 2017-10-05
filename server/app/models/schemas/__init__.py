@@ -14,6 +14,7 @@ class UserSchema(ModelSchema):
     # Avoid infinite recursion
     roles = fields.Nested('RoleSchema', many=True, only=('id', 'name', 'code'), exclude=('users', 'user_roles'))
     groups = fields.Nested('GroupSchema', many=True, only=('id', 'name', 'code'), exclude=('users', 'user_groups'))
+    password_resets = fields.Nested('PasswordResetSchema', many=True, only=('id', 'user_id', 'token'), exclude=('users'))
     class Meta:
         model = User
 

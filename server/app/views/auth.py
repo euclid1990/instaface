@@ -1,4 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
+from uuid import uuid4
+from hashlib import sha256
+from datetime import datetime, timedelta
 from app import (
     sa,
     jwt,
@@ -8,7 +11,7 @@ from app import (
     get_jwt_identity,
     send_mail,
 )
-from app.models import User, UserAccessToken
+from app.models import User, UserAccessToken, PasswordReset
 from app.forms import AuthForm
 from app.common import make_response
 
@@ -72,10 +75,45 @@ def active(active_token):
         return {'message': "You have active account successfully.", 'data': {'result': result}}
     return {'message': "Your account has already been activated.", 'data': {'result': result}}
 
-@mod.route('/forgot')
+@mod.route('/forgot', methods=['POST'])
+@make_response
 def forgot():
-    return 'Forgot'
+    form = Form.Forgot()
+    if form.validate_on_submit():
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        if user is None:
+            return {'message': "The email cannot be recognized.", 'data': {}}
+        reset_token = sha256(str(uuid4()).encode('utf-8')).hexdigest()
+        password_reset = PasswordReset.create(dict(user_id=user.id, token=reset_token))
+        return {'message': "You have forgot password successfully.", 'data': {}}
+    return form
 
-@mod.route('/reset')
-def reset():
-    return 'Reset'
+@mod.route('/reset/<reset_token>', methods=['POST'])
+@make_response
+def reset(reset_token):
+    form = Form.Reset()
+    if form.validate_on_submit():
+        record = PasswordReset.query.filter_by(token=reset_token, deleted_at=None).first()
+        if record is None:
+            return {'message': "The reset password token cannot be recognized.", 'data': {}}
+        expired_at = record.created_at + timedelta(hours=24)
+        if datetime.utcnow() > expired_at:
+            return {'message': "The reset password token has expired.", 'data': {}}
+        password = request.form['password']
+        record.deleted_at = datetime.utcnow()
+        User.updateById(record.user_id, dict(password=User.hash_password(password), password_changed_at=datetime.utcnow()))
+        return {'message': "You have reset password successfully.", 'data': {}}
+    return form
+
+@mod.route('/password', methods=['POST'])
+@jwt_required
+@make_response
+def password():
+    user_id = get_jwt_identity()
+    form = Form.Password(user_id)
+    if form.validate_on_submit():
+        password = request.form['new_password']
+        User.updateById(user_id, dict(password=User.hash_password(password), password_changed_at=datetime.utcnow()))
+        return {'message': "You have changed password successfully.", 'data': {}}
+    return form

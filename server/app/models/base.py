@@ -48,7 +48,7 @@ class Mixin(object):
     @classmethod
     def updateById(cls, id, data):
         data.update(dict(updated_at=datetime.utcnow()))
-        result = cls.query.filter_by(id=1).update(data)
+        result = cls.query.filter_by(id=id).update(data)
         sa.session.commit()
         return result
 

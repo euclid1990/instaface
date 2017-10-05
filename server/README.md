@@ -9,6 +9,13 @@ Architecture: Using blueprints with functional structure
 $ pip3 install -r requirements.txt
 ```
 
+- Upgrade Package:
+
+```
+$ pur -r requirements.txt
+$ pip3 install --upgrade -r requirements.txt
+```
+
 ## Install new packages and save it in requirements.txt
 
 ```

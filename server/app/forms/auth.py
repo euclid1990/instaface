@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-from .validators import Unique
+from .validators import Unique, OldPassword
 from app.common import Constants
 from app.models import User
 
@@ -27,3 +27,31 @@ class AuthForm(object):
     class Login(FlaskForm):
         email = StringField('Email', validators=[DataRequired(), Email()])
         password = PasswordField('Password', validators=[DataRequired()])
+
+    class Forgot(FlaskForm):
+        email = StringField('Email', validators=[DataRequired(), Email()])
+
+    class Reset(FlaskForm):
+        password = PasswordField('Password', validators=[
+            DataRequired(),
+            Length(min=Constants.USER_PASSWORD_MIN_LENGTH, max=Constants.USER_PASSWORD_MAX_LENGTH),
+            EqualTo('password_confirm', message='Password and confirmation password do not match')
+        ])
+        password_confirm = PasswordField('Password Confirmation')
+
+    class Password(FlaskForm):
+        def __init__(self, user_id, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.user_id = user_id
+
+        old_password = StringField('Email', validators=[
+            DataRequired(),
+            OldPassword(User)
+        ])
+
+        new_password = PasswordField('New Password', validators=[
+            DataRequired(),
+            Length(min=Constants.USER_PASSWORD_MIN_LENGTH, max=Constants.USER_PASSWORD_MAX_LENGTH),
+            EqualTo('new_password_confirm', message='New password and confirmation password do not match')
+        ])
+        new_password_confirm = PasswordField('New Password Confirmation')

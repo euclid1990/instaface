@@ -36,6 +36,8 @@ class User(Base, Mixin):
 
     groups = sa.relationship('Group', secondary='user_groups', viewonly=True)
 
+    password_resets = sa.relationship('PasswordReset', back_populates='users')
+
     fillable = ['name', 'username', 'email', 'password', 'birthday', 'phone', 'gender', 'status', 'about', 'active_token']
     output = ('id', 'username', 'email', 'phone', 'gender', 'status', 'about', 'roles', 'groups', 'created_at', 'updated_at', 'deleted_at')
 
@@ -49,10 +51,13 @@ class User(Base, Mixin):
 
     @password.setter
     def set_password(self, password):
-        self._password = bcrypt.generate_password_hash(password)
+        self._password = self.hash_password(password)
+
+    @classmethod
+    def hash_password(cls, value):
+        return bcrypt.generate_password_hash(value)
 
     def check_password(self, input_password):
-        print(self.password)
         return bcrypt.check_password_hash(self.password, input_password)
 
     @classmethod
