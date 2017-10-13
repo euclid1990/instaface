@@ -7,17 +7,13 @@
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Username or Email"
             formControlName="username" appFocus>
-            <div *ngIf="formErrors.username" class="form-error">
-                {{ formErrors.username }}
-            </div>
+            <app-form-error [control]="form.controls.username" [overrideMsg]="formErrors['username']"></app-form-error>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" placeholder="Password"
             autocomplete="new-password"
             formControlName="password">
-            <div *ngIf="formErrors.password" class="form-error">
-                {{ formErrors.password }}
-            </div>
+            <app-form-error [control]="form.controls.password" [overrideMsg]="formErrors['password']"></app-form-error>
         </div>
         <div class="form-group">
             <div class="text-center">

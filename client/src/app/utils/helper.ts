@@ -17,6 +17,10 @@ const HTTP_ERRORS = [
   {code: 503, message: 'Service Unavailable'},
 ];
 
+const VALIDATOR_MESSAGES = {
+  'required': 'The :attribute field is required.',
+}
+
 @Injectable()
 export class Helper {
 
@@ -59,5 +63,28 @@ export class Helper {
       }
     }
     return formErrors;
+  }
+
+  static ucfirst(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  static getFormErrorMessages(controlName: string, validatorName: string, overrideMsg: Object): string {
+    const config = Lodash.assign({}, VALIDATOR_MESSAGES, overrideMsg);
+    if (config.hasOwnProperty(validatorName)) {
+      if (!controlName) {
+        return config[validatorName];
+      }
+      let replacers = {
+        ':attribute': controlName,
+        ':ATTRIBUTE': controlName.toUpperCase(),
+        ':Attribute': Helper.ucfirst(controlName)
+      };
+      let msg = config[validatorName].replace(/(\:attribute|\:ATTRIBUTE|\:Attribute)/g, function(match) {
+        return replacers[match];
+      });
+      return msg;
+    }
+    return null;
   }
 }

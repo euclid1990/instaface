@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
   public form: FormGroup;
   public formErrors: Object;
   public formMessages: Object = {};
-  private formValidations: Object;
 
   constructor(
     private router: Router,
@@ -31,7 +30,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    this.createFormValidations();
     this.createFormErrors();
   }
 
@@ -40,11 +38,10 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-    this.form.valueChanges.subscribe(data => this.onValueChanged(data));
   }
 
-  createFormValidations() {
-    this.formValidations = {
+  createFormErrors() {
+    this.formErrors = {
       username: {
         required: 'Username/Email is required.'
       },
@@ -52,21 +49,6 @@ export class LoginComponent implements OnInit {
         required: 'Password is required.'
       }
     };
-  }
-
-  createFormErrors() {
-    this.formErrors = {
-      username: '',
-      password: ''
-    };
-  }
-
-  onValueChanged(data?: any) {
-    if (!this.form) { return; }
-    const form = this.form;
-    // Clear previous error message (if have any)
-    this.createFormErrors();
-    this.formErrors = Helper.getFormErrors(form, this.formValidations, this.formErrors);
   }
 
   redirect() {
