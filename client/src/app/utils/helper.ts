@@ -93,4 +93,18 @@ export class Helper {
     }
     return null;
   }
+
+  static markFormAsTouched(form: FormGroup): void {
+    for (const field in form.controls) {
+      if (form.controls.hasOwnProperty(field)) {
+        let control: any = form.controls[field];
+        // If field control is formGroup
+        if (control.controls) {
+          Helper.markFormAsTouched(control);
+        } else {
+          control.markAsTouched();
+        };
+      }
+    }
+  }
 }

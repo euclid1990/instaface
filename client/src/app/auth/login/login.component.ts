@@ -71,6 +71,8 @@ export class LoginComponent implements OnInit {
         }
       });
       this.submitting = true;
+    } else {
+      Helper.markFormAsTouched(this.form);
     }
   }
 }

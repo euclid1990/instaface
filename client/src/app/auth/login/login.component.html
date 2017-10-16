@@ -4,7 +4,7 @@
         <app-form-message [serverMsg]="serverMessage" [formMsgs]="formMessages"></app-form-message>
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Username or Email"
-            formControlName="email" appFocus>
+            formControlName="email">
             <app-form-error [control]="form.controls.email" [overrideMsg]="formErrors['email']"></app-form-error>
         </div>
         <div class="form-group">
@@ -15,7 +15,7 @@
         </div>
         <div class="form-group">
             <div class="text-center">
-                <button type="submit" class="btn btn-default" [disabled]="!f.form.valid || submitting">Login <i *ngIf="submitting" class="fa fa-circle-o-notch fa-spin"></i></button>
+                <button type="submit" class="btn btn-default" [disabled]="submitting">Login <i *ngIf="submitting" class="fa fa-circle-o-notch fa-spin"></i></button>
             </div>
         </div>
         <div class="form-group">
