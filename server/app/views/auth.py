@@ -49,7 +49,8 @@ def login():
     if result is None:
         return {'success': False, 'message': "These credentials do not match our records.", 'data': {}}
     access_token, refresh_token = UserAccessToken.create(user_id=result.id, with_refresh_token=True)
-    return {'message': "You have logged in successfully.", 'data': {'access_token': access_token, 'refresh_token': refresh_token}}
+    return {'message': "You have logged in successfully.",
+        'data': {'user': {'id': result.id, 'name': result.name}, 'access_token': access_token, 'refresh_token': refresh_token}}
 
 @mod.route('/logout')
 @jwt_required
