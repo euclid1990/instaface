@@ -41,20 +41,34 @@ export class Api {
     const body = JSON.stringify(parameters);
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    let authInfo = JSON.parse(localStorage.getItem('auth'));
+    if (authInfo) {
+      headers.append('Authorization', 'Bearer ' + authInfo.accessToken);
+    }
     let params = new URLSearchParams(body);
+    let options: Object = {headers: headers};
     switch (method) {
       case METHOD_GET:
-        return this.http.get(this.get(route), {headers: headers, params: params}).map(res => res.json());
+        if (parameters) {
+          options = {headers: headers, params: params};
+        }
+        return this.http.get(this.get(route), options).map(res => res.json());
       case METHOD_POST:
-        return this.http.post(this.get(route), body, {headers: headers}).map(res => res.json());
+        return this.http.post(this.get(route), body, options).map(res => res.json());
       case METHOD_PUT:
-        return this.http.put(this.get(route), body, {headers: headers}).map(res => res.json());
+        return this.http.put(this.get(route), body, options).map(res => res.json());
       case METHOD_PATCH:
-        return this.http.patch(this.get(route), body, {headers: headers}).map(res => res.json());
+        return this.http.patch(this.get(route), body, options).map(res => res.json());
       case METHOD_DELETE:
-        return this.http.delete(this.get(route), {headers: headers, params: params}).map(res => res.json());
+        if (parameters) {
+          options = {headers: headers, params: params};
+        }
+        return this.http.delete(this.get(route), options).map(res => res.json());
       default:
-        return this.http.get(this.get(route), {headers: headers, params: params}).map(res => res.json());
+        if (parameters) {
+          options = {headers: headers, params: params};
+        }
+        return this.http.get(this.get(route), options).map(res => res.json());
     }
   }
 }

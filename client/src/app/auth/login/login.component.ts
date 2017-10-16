@@ -6,6 +6,7 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 
+import { AuthService } from '../../services/auth.service';
 import { Helper } from '../../utils/helper';
 import { Api } from '../../utils/api';
 
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private http: Http,
     private fb: FormBuilder,
-    private api: Api) {
+    private api: Api,
+    private authSv: AuthService) {
   }
 
   ngOnInit() {
@@ -62,7 +64,9 @@ export class LoginComponent implements OnInit {
       .catch(Helper.getFormHandleError)
       .subscribe((response: any) => {
         if (response.success) {
+          let data = response.data
           this.submitted = true;
+          this.authSv.store(data.user, data.access_token, data.refresh_token);
           this.redirect();
         } else {
           this.formMessages = response.errors || {};
