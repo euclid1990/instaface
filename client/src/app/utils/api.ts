@@ -5,16 +5,15 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 const ENDPOINTS = {
-  'user': {
-    'create': '/api/user/create',
-    'store': '/api/user',
-    'show': '/api/user/{user}',
-    'edit': '/api/user/{user}/edit',
-    'update': '/api/user/{user}',
-    'destroy': '/api/user/{user}',
-    'login': '/api/user/login',
-    'logout': '/api/user/logout',
-    'password': '/api/user/password'
+  'auth': {
+    'register': '/api/auth/register',
+    'login': '/api/auth/login',
+    'logout': '/api/auth/logout',
+    'refresh': '/api/auth/refresh',
+    'active': '/api/auth/active',
+    'forgot': '/api/auth/forgot',
+    'reset': '/api/auth/reset',
+    'password': '/api/auth/password',
   },
   'validate': {
     'unique_email': '/api/validate/unique_email'

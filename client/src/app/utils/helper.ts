@@ -19,6 +19,7 @@ const HTTP_ERRORS = [
 
 const VALIDATOR_MESSAGES = {
   'required': 'The :attribute field is required.',
+  'unique': 'The :attribute has already been taken.',
 }
 
 @Injectable()
@@ -27,13 +28,18 @@ export class Helper {
   constructor() { }
 
   static getFormHandleError(error: any): any {
-    let messages: any = {};
+    let message: string = '';
     if (error['status']) {
       const e = Lodash.find(HTTP_ERRORS, {'code': +error.status}); // Converted to a number with the JavaScript (+) operator.
-      messages.server = [e.message];
+      message = e.message;
+    }
+    let errors: Object = {}
+    if (error['_body']) {
+      let body = JSON.parse(error['_body']);
+      errors = body['errors'];
     }
     return Observable.create(function (observer) {
-      observer.next({ status: 500, errors: messages });
+      observer.next({ success: false, message: message, errors: errors });
       observer.complete();
     });
   }

@@ -1,10 +1,11 @@
-from flask import jsonify, render_template
+from flask import jsonify, render_template, request, g
 from flask_mail import Message
 from flask_wtf import FlaskForm
 from functools import wraps
 from werkzeug.exceptions import HTTPException, default_exceptions, _aborter
 from sqlalchemy.exc import DatabaseError, IntegrityError, OperationalError, StatementError
 from marshmallow_sqlalchemy import ModelConversionError, ModelSchema
+from werkzeug.datastructures import MultiDict
 
 def make_response(f):
     @wraps(f)
@@ -17,6 +18,25 @@ def make_response(f):
             return jsonify({'success': False, 'errors': result.errors}), status
         success, message, data = result.get('success', True), result.get('message', ""), result.get('data', {})
         return jsonify({'success': success, 'message': message, 'data': data}), status
+    return wrapper
+
+def make_validate(form_class):
+    def wrapper(f):
+        @wraps(f)
+        def inner(*args, **kwargs):
+            if request.method == 'GET':
+                formdata = request.args
+            else:
+                if request.json:
+                    formdata = MultiDict(request.json)
+                else:
+                    formdata = request.form
+            form = form_class(formdata=formdata)
+            if not form.validate():
+                return form
+            g.form = form
+            return f(*args, **kwargs)
+        return inner
     return wrapper
 
 def register_missing_exception():

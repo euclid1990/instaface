@@ -1,0 +1,11 @@
+{% extends "email.html" %}
+
+{% block content %}
+    <h1 style="font-size:20px;color:rgb(40,40,40)">Hi {{ name }}!</h1>
+    <div>
+        <p>We received a request to reset your password. Click the link below to choose a new one:</p>
+        <strong>
+            <a href="{{ url_for('auth.reset', reset_token=data['reset_token'], _external=True) }}" target="_blank">RESET YOUR PASSWORD</a>
+        </strong>
+    </div>
+{% endblock %}

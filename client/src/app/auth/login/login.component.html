@@ -1,13 +1,11 @@
 <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
     <h1 class="form-header">Login</h1>
     <form (ngSubmit)="onSubmit()" [formGroup]="form" #f="ngForm" autocomplete="off">
-        <ul *ngIf="(formMessages | json) != '{}'" class="form-error margin-bottom-15 break-word">
-            <li *ngFor="let message of formMessages | objectToArray" class="margin-left-15">{{ message }}</li>
-        </ul>
+        <app-form-message [serverMsg]="serverMessage" [formMsgs]="formMessages"></app-form-message>
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Username or Email"
-            formControlName="username" appFocus>
-            <app-form-error [control]="form.controls.username" [overrideMsg]="formErrors['username']"></app-form-error>
+            formControlName="email" appFocus>
+            <app-form-error [control]="form.controls.email" [overrideMsg]="formErrors['email']"></app-form-error>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" placeholder="Password"

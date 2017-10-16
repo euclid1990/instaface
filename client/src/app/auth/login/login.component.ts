@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   public form: FormGroup;
   public formErrors: Object;
   public formMessages: Object = {};
+  public serverMessage: string = '';
 
   constructor(
     private router: Router,
@@ -35,14 +36,14 @@ export class LoginComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
   createFormErrors() {
     this.formErrors = {
-      username: {
+      email: {
         required: 'Username/Email is required.'
       },
       password: {
@@ -57,14 +58,15 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.api.request('user.login', 'POST', this.form.value)
+      this.api.request('auth.login', 'POST', this.form.value)
       .catch(Helper.getFormHandleError)
       .subscribe((response: any) => {
-        if (+response.status === 200) {
+        if (response.success) {
           this.submitted = true;
           this.redirect();
         } else {
-          this.formMessages = response.errors;
+          this.formMessages = response.errors || {};
+          this.serverMessage = response.message || '';
           this.submitting = false;
         }
       });

@@ -1,0 +1,8 @@
+<div>
+    <div *ngIf="serverMsg && serverMsg !== 'Bad Request'" class="form-error margin-bottom-10 break-word">
+        {{ serverMsg }}
+    </div>
+    <ul *ngIf="(formMsgs | json) != '{}'" class="form-error margin-bottom-10 break-word">
+        <li *ngFor="let message of formMsgs | objectToArray" class="margin-left-15">{{ message['key'] | titlecase }}: {{ message }}</li>
+    </ul>
+</div>
