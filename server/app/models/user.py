@@ -50,7 +50,7 @@ class User(Base, Mixin):
         return self._password
 
     @password.setter
-    def set_password(self, password):
+    def password(self, password):
         self._password = self.hash_password(password)
 
     @classmethod

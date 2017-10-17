@@ -28,9 +28,8 @@ def register():
     data = request.json
     import random
     num = random.choice(list(x for x in range(100)))
-    name, email, password = data['name'], data['email'].format(num), data['password']
-
-    result = User.register(dict(name=name, email=email, password=password))
+    name, email, password, gender = data['name'], data['email'].format(num), data['password'], User.GENDER.get(data['gender'], User.GENDER['UNKNOWN'])
+    result = User.register(dict(name=name, email=email, password=password, gender=gender))
     send_mail(
         email,
         'Confirm your account on Instaface',
@@ -38,6 +37,7 @@ def register():
         {'active_token': result.active_token}
     )
     return {'message': "You have registered successfully.", 'data': {'user': User.json(result)}}
+
 
 @mod.route('/login', methods=['POST'])
 @make_response
@@ -52,6 +52,7 @@ def login():
     return {'message': "You have logged in successfully.",
         'data': {'user': {'id': result.id, 'name': result.name}, 'access_token': access_token, 'refresh_token': refresh_token}}
 
+
 @mod.route('/logout')
 @jwt_required
 @make_response
@@ -59,6 +60,7 @@ def logout():
     jwt = get_raw_jwt()
     result = UserAccessToken.add_token_to_blacklist(jwt['jti'])
     return {'message': "You have logged out successfully.", 'data': {'result': result}}
+
 
 @mod.route('/refresh')
 @jwt_refresh_token_required
@@ -76,6 +78,7 @@ def active(active_token):
     if result:
         return {'message': "You have active account successfully.", 'data': {'result': result}}
     return {'message': "Your account has already been activated.", 'data': {'result': result}}
+
 
 @mod.route('/forgot', methods=['POST'])
 @make_response
@@ -95,6 +98,7 @@ def forgot():
     )
     return {'message': "You have forgot password successfully.", 'data': {}}
 
+
 @mod.route('/reset/<reset_token>', methods=['POST'])
 @make_response
 @make_validate(form_class=Form.Reset)
@@ -109,6 +113,7 @@ def reset(reset_token):
     record.deleted_at = datetime.utcnow()
     User.updateById(record.user_id, dict(password=User.hash_password(password), password_changed_at=datetime.utcnow()))
     return {'message': "You have reset password successfully.", 'data': {}}
+
 
 @mod.route('/password', methods=['POST'])
 @jwt_required
