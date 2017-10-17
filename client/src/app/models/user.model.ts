@@ -17,9 +17,9 @@ export interface IGender {
   value: string;
 }
 
-export const FEMALE = 'F';
+export const FEMALE = 'FEMALE';
 
-export const MALE = 'M';
+export const MALE = 'MALE';
 
 export const GENDERS: Array<IGender> = [
   { name: 'Female', value: FEMALE },

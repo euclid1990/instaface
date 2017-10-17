@@ -1,3 +1,54 @@
-<p>
-  register works!
-</p>
+<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+    <div [hidden]="submitted">
+        <h1 class="form-header">Register</h1>
+        <form novalidate (ngSubmit)="onSubmit()" [formGroup]="form" #f="ngForm">
+            <app-form-message [serverMsg]="serverMessage" [formMsgs]="formMessages"></app-form-message>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Full name" name="name"
+                formControlName="name">
+                <app-form-error [control]="form.controls.name" [overrideMsg]="formErrors['name']"></app-form-error>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="gender"
+                    [value]="null"
+                    formControlName="gender">
+                        <option [disabled]="true" [value]="null">Select your gender</option>
+                        <option *ngFor="let g of genders" [value]="g.value">{{ g.name }}</option>
+                </select>
+                <app-form-error [control]="form.controls.gender" [overrideMsg]="formErrors['gender']"></app-form-error>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Email" name="email"
+                formControlName="email">
+                <app-form-error [control]="form.controls.email" [overrideMsg]="formErrors['email']"></app-form-error>
+            </div>
+            <div class="form-group" formGroupName="passwords">
+                <input type="password" class="form-control" placeholder="Password" name="password"
+                formControlName="password">
+                <app-form-error [control]="form.controls.passwords.controls.password" [overrideMsg]="formErrors['password']"></app-form-error>
+            </div>
+            <div class="form-group" formGroupName="passwords">
+                <input type="password" class="form-control" placeholder="Retype password" name="password_confirmation"
+                formControlName="password_confirmation"
+                [class.invalid]="!f.form.controls.passwords.valid">
+                <app-form-error [control]="form.controls.passwords.controls.password_confirmation" [overrideMsg]="formErrors['password_confirmation']"></app-form-error>
+                <app-form-error [control]="form.controls.passwords" [overrideMsg]="formErrors['passwords']"></app-form-error>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" name="agreed"
+                formControlName="agreed"> I agree to the terms</label>
+                <app-form-error [control]="form.controls.agreed" [overrideMsg]="formErrors['agreed']"></app-form-error>
+            </div>
+            <div class="form-group">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-default" [disabled]="submitting">Register <i *ngIf="submitting" class="fa fa-circle-o-notch fa-spin"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div [hidden]="!submitted">
+        <h1 class="form-header">Registration Complete !</h1>
+        <div class="text-center">You will be redirected to the Login page in {{ second }} seconds</div>
+    </div>
+</div>

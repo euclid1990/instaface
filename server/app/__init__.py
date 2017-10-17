@@ -94,5 +94,7 @@ def send_mail(to, subject, path_to_template, data):
 # Register all blueprints
 from app.views import home
 from app.views import auth
+from app.views import validate
 app.register_blueprint(home.mod)
 app.register_blueprint(auth.mod)
+app.register_blueprint(validate.mod)
