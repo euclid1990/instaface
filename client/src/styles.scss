@@ -34,6 +34,10 @@
     padding-bottom: $bottom;
 }
 
+.margin-top-10 {
+    @include margin-top(10px);
+}
+
 .margin-bottom-10 {
     @include margin-bottom(10px);
 }

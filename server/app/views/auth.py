@@ -87,7 +87,7 @@ def forgot():
     email = request.json['email']
     user = User.query.filter_by(email=email).first()
     if user is None:
-        return {'message': "The email cannot be recognized.", 'data': {}}
+        return {'message': "The email cannot be recognized.", 'data': {}, 'success': False}
     reset_token = sha256(str(uuid4()).encode('utf-8')).hexdigest()
     password_reset = PasswordReset.create(dict(user_id=user.id, token=reset_token))
     send_mail(
