@@ -105,11 +105,11 @@ def forgot():
 def reset(reset_token):
     record = PasswordReset.query.filter_by(token=reset_token, deleted_at=None).first()
     if record is None:
-        return {'message': "The reset password token cannot be recognized.", 'data': {}}
+        return {'message': "The reset password token cannot be recognized.", 'data': {}, 'success': False}
     expired_at = record.created_at + timedelta(hours=24)
     if datetime.utcnow() > expired_at:
-        return {'message': "The reset password token has expired.", 'data': {}}
-    password = request.form['password']
+        return {'message': "The reset password token has expired.", 'data': {}, 'success': False}
+    password = request.json['password']
     record.deleted_at = datetime.utcnow()
     User.updateById(record.user_id, dict(password=User.hash_password(password), password_changed_at=datetime.utcnow()))
     return {'message': "You have reset password successfully.", 'data': {}}

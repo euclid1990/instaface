@@ -12,7 +12,7 @@ const ENDPOINTS = {
     'refresh': '/api/auth/refresh',
     'active': '/api/auth/active',
     'forgot': '/api/auth/forgot',
-    'reset': '/api/auth/reset',
+    'reset': '/api/auth/reset/:token',
     'password': '/api/auth/password',
   },
   'validate': {
@@ -34,7 +34,7 @@ export class Api {
   constructor(private http: Http) { }
 
   get(key: any): any {
-    return Lodash.get(this._config, key);
+    return Lodash.get(this._config, key) || key;
   }
 
   request(route: string, method: string, parameters: Object): Observable<any> {
