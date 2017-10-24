@@ -1,3 +1,4 @@
+import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -27,6 +28,7 @@ export class ResetComponent implements OnInit {
   public serverMessage: string = '';
 
   constructor(
+    private titleSv: Title,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -34,6 +36,7 @@ export class ResetComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleSv.setTitle("Reset Password");
     this.token = this.route.snapshot.paramMap.get('token');
     this.createForm();
     this.createFormErrors();

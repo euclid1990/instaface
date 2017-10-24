@@ -1,3 +1,4 @@
+import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http, Headers } from '@angular/http';
@@ -35,6 +36,7 @@ export class RegisterComponent implements OnInit {
   public genders: Array<Object> = GENDERS;
 
   constructor(
+    private titleSv: Title,
     private router: Router,
     private http: Http,
     private fb: FormBuilder,
@@ -44,6 +46,7 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleSv.setTitle("Register");
     this.createForm();
     this.createFormErrors();
   }

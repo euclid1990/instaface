@@ -1,3 +1,4 @@
+import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http, Headers } from '@angular/http';
@@ -26,6 +27,7 @@ export class ForgotComponent implements OnInit {
   public serverMessage: string = '';
 
   constructor(
+    private titleSv: Title,
     private router: Router,
     private http: Http,
     private fb: FormBuilder,
@@ -33,6 +35,7 @@ export class ForgotComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleSv.setTitle("Forgot Password");
     this.createForm();
     this.createFormErrors();
   }

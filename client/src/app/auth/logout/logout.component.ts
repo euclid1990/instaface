@@ -1,3 +1,4 @@
+import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,9 +13,10 @@ import { Api } from '../../utils/api';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(private router: Router, private api: Api, private authSv: AuthService) { }
+  constructor(private titleSv: Title, private router: Router, private api: Api, private authSv: AuthService) { }
 
   ngOnInit() {
+    this.titleSv.setTitle("Logout");
     this.api.request('auth.logout', 'GET', null)
       .catch(Helper.getFormHandleError)
       .subscribe((response: any) => {

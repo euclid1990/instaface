@@ -1,3 +1,4 @@
+import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http, Headers } from '@angular/http';
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit {
   public serverMessage: string = '';
 
   constructor(
+    private titleSv: Title,
     private router: Router,
     private http: Http,
     private fb: FormBuilder,
@@ -32,6 +34,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleSv.setTitle("Login");
     this.createForm();
     this.createFormErrors();
   }

@@ -1,3 +1,4 @@
+import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -25,12 +26,14 @@ export class PasswordComponent implements OnInit {
   public serverMessage: string = '';
 
   constructor(
+    private titleSv: Title,
     private router: Router,
     private fb: FormBuilder,
     private api: Api) {
   }
 
   ngOnInit() {
+    this.titleSv.setTitle("Change Password");
     this.createForm();
     this.createFormErrors();
   }
