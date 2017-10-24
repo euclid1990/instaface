@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-from .validators import Unique, OldPassword
+from .validators import Unique, CurrentPassword
 from app.common import Constants
 from app.models import User
 
@@ -44,9 +44,9 @@ class AuthForm(object):
             super().__init__(*args, **kwargs)
             self.user_id = user_id
 
-        old_password = StringField('Email', validators=[
+        current_password = PasswordField('Current Password', validators=[
             DataRequired(),
-            OldPassword(User)
+            CurrentPassword(User)
         ])
 
         new_password = PasswordField('New Password', validators=[

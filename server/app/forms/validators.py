@@ -12,8 +12,8 @@ class Unique(object):
             raise ValidationError(self.message)
 
 
-class OldPassword(object):
-    def __init__(self, model, message="The password you entered does not match your old password."):
+class CurrentPassword(object):
+    def __init__(self, model, message="The password you entered does not match your current password."):
         self.model = model
         self.message = message
 

@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ForgotComponent } from './forgot/forgot.component';
 import { ResetComponent } from './reset/reset.component';
+import { PasswordComponent } from './password/password.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,7 @@ import { ResetComponent } from './reset/reset.component';
     PipesModule,
     AuthRoutingModule
   ],
-  declarations: [RegisterComponent, LoginComponent, LogoutComponent, ForgotComponent, ResetComponent, AuthComponent],
+  declarations: [RegisterComponent, LoginComponent, LogoutComponent, ForgotComponent, ResetComponent, AuthComponent, PasswordComponent],
   providers: [Api]
 })
 export class AuthModule { }
