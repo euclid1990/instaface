@@ -7,11 +7,15 @@ export class AuthService {
   public user: any;
   public accessToken: string;
   public refreshToken: string;
+  public isLoggedIn: boolean = false;
 
   // Observable object sources
   public authSource = new Subject<Object>();
   // Observable object streams
   public auth$ = this.authSource.asObservable();
+
+  // Store the URL so we can redirect after logging in
+  redirectUrl: string = '/';
 
   constructor() {
     let auth = JSON.parse(localStorage.getItem('auth'));
@@ -19,6 +23,7 @@ export class AuthService {
       this.setUser(auth.user);
       this.setAccessToken(auth.accessToken);
       this.setRefreshToken(auth.refreshToken);
+      this.setIsLoggedIn(true);
     }
   }
 
@@ -31,6 +36,7 @@ export class AuthService {
     this.setUser(user);
     this.setAccessToken(accessToken);
     this.setRefreshToken(refreshToken);
+    this.setIsLoggedIn(true);
     let auth: Object = { user: this.user, accessToken: this.accessToken, refreshToken: this.refreshToken };
     localStorage.setItem('auth', JSON.stringify(auth));
     this.authSource.next(auth);
@@ -40,6 +46,7 @@ export class AuthService {
     this.setUser(null);
     this.setAccessToken(null);
     this.setRefreshToken(null);
+    this.setIsLoggedIn(false);
     localStorage.removeItem('auth');
     let auth: Object = { user: null, accessToken: null, refreshToken: null };
     this.authSource.next(auth);
@@ -67,6 +74,14 @@ export class AuthService {
 
   setUser(user: any) {
     this.user = user;
+  }
+
+  getIsLoggedIn() {
+    return this.isLoggedIn;
+  }
+
+  setIsLoggedIn(isLoggedIn: boolean) {
+    this.isLoggedIn = isLoggedIn;
   }
 
   getHeaders() {

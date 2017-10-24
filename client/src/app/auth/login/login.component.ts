@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   }
 
   redirect() {
-    this.router.navigate(['/']);
+    this.router.navigate([this.authSv.redirectUrl]);
   }
 
   onSubmit() {
