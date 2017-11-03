@@ -9,6 +9,8 @@ from .role import Role
 from .user_role import UserRole
 from .group import Group
 from .user_group import UserGroup
+from .project import Project
+from .user_project import UserProject
 
 class User(Base, Mixin):
     GENDER = {'UNKNOWN': 0, 'MALE': 1, 'FEMALE': 2}
@@ -37,6 +39,8 @@ class User(Base, Mixin):
     groups = sa.relationship('Group', secondary='user_groups', viewonly=True)
 
     password_resets = sa.relationship('PasswordReset', back_populates='users')
+
+    projects = sa.relationship('Project', secondary='user_projects', viewonly=True)
 
     fillable = ['name', 'username', 'email', 'password', 'birthday', 'phone', 'gender', 'status', 'about', 'active_token']
     output = ('id', 'username', 'email', 'phone', 'gender', 'status', 'about', 'roles', 'groups', 'created_at', 'updated_at', 'deleted_at')

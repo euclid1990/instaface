@@ -10,14 +10,11 @@ class Group(Base, Mixin):
     code = sa.Column(sa.SmallInteger(), unique=True)
 
     users = sa.relationship('User', secondary='user_groups', viewonly=True)
+    projects = sa.relationship('Project', back_populates='group')
 
     fillable = ['name', 'code']
     output = ('id', 'name')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-    @classmethod
-    def set_schema(cls):
-        cls.schema = GroupSchema
 

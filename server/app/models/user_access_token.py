@@ -26,10 +26,6 @@ class UserAccessToken(Base, Mixin):
         super().__init__(**kwargs)
 
     @classmethod
-    def set_schema(cls):
-        cls.schema = UserAccessTokenSchema
-
-    @classmethod
     def create(cls, user_id, with_refresh_token=False):
         expires = timedelta(days=7)
         access_token = create_access_token(identity=user_id, expires_delta=expires, fresh=with_refresh_token)

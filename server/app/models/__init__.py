@@ -6,3 +6,11 @@ from .user_role import UserRole
 from .user_group import UserGroup
 from .user_access_token import UserAccessToken
 from .password_reset import PasswordReset
+from .project import Project
+from .user_project import UserProject
+from .member import Member
+from .project_member import ProjectMember
+from .github import Github
+from .redmine import Redmine
+from .chatwork import Chatwork
+from .slack import Slack

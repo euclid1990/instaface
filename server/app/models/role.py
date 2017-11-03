@@ -19,7 +19,3 @@ class Role(Base, Mixin):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    @classmethod
-    def set_schema(cls):
-        cls.schema = RoleSchema
-

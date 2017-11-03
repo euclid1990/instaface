@@ -18,6 +18,7 @@ export class AuthService {
   redirectUrl: string = '/';
 
   constructor() {
+    console.log(3);
     let auth = JSON.parse(localStorage.getItem('auth'));
     if (auth) {
       this.setUser(auth.user);

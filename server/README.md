@@ -28,6 +28,7 @@ pip3 install [package_name] && pip3 freeze > requirements.txt
 $ python3 -m manage db init
 $ python3 -m manage db migrate
 $ python3 -m manage db upgrade
+$ python3 -m manage db downgrade
 ```
 
 ## Seeding database with test data commands

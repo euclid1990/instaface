@@ -26,7 +26,6 @@ class Base(sa.Model):
     @classmethod
     def dump(cls, Schema, obj, only=()):
         schema = Schema(only=only)
-        print(schema)
         result = schema.dump(obj)
         return result.data
 

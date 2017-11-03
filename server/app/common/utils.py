@@ -80,6 +80,14 @@ def setup_schema(Base, session):
         UserRoleSchema,
         GroupSchema,
         UserGroupSchema,
+        ProjectSchema,
+        UserProjectSchema,
+        MemberSchema,
+        ProjectMemberSchema,
+        GithubSchema,
+        RedmineSchema,
+        ChatworkSchema,
+        SlackSchema,
     )
     for class_ in Base._decl_class_registry.values():
         if hasattr(class_, '__tablename__'):
