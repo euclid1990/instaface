@@ -1,8 +1,12 @@
-from . import app
-from . import database
-from . import jwt
-from . import mail
-from . import redis
+from . import (
+    app,
+    database,
+    jwt,
+    mail,
+    redis,
+    github,
+    chatwork,
+)
 
 class Config(object):
     APP = app
@@ -10,3 +14,5 @@ class Config(object):
     JWT = jwt
     MAIL = mail
     REDIS = redis
+    GITHUB = github
+    CHATWORK = chatwork

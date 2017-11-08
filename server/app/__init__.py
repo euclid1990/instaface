@@ -95,6 +95,8 @@ def send_mail(to, subject, path_to_template, data):
 from app.views import home
 from app.views import auth
 from app.views import validate
+from app.views import oauth
 app.register_blueprint(home.mod)
 app.register_blueprint(auth.mod)
 app.register_blueprint(validate.mod)
+app.register_blueprint(oauth.mod)

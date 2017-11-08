@@ -35,3 +35,10 @@ services:
       - "6379:6379"
     environment:
       - REDIS_PASSWORD=redis_pwd
+
+  cert:
+    image: euclid1990/ubuntu-server
+    command: [/bin/sh, cert/command.sh]
+    volumes:
+      - .:/var/www/app
+    working_dir: /var/www/app
